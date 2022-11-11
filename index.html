@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="btn">test index ipc on</button>
+    <button id="btn1">test ipc on</button>
+    <button id="btn2">test ipc handle</button>
+    <script>
+      document.querySelector('#btn').addEventListener('click', () => {
+        $api.test();
+      });
+      document.querySelector('#btn1').addEventListener('click', () => {
+        $api.test1();
+      });
+      document.querySelector('#btn2').addEventListener('click', () => {
+        $api.test2();
+      });
+    </script>
+  </body>
+</html>
