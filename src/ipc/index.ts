@@ -6,5 +6,5 @@ ipcMain.on('ipc_test', () => {
 });
 
 ipcMain.handle('ipc_test', () => {
-  return 2;
+  return 1111;
 });
