@@ -2,9 +2,9 @@ import { ipcMain } from 'electron';
 import bw from 'browserWindow';
 
 ipcMain.on('ipc_test', () => {
-  bw.webContents.send('ipc_test', 111);
+  bw.webContents.send('ipc_test', 11);
 });
 
 ipcMain.handle('ipc_test', () => {
-  return 3;
+  return 2;
 });
