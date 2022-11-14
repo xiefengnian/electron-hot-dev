@@ -1,1 +1,5 @@
-declare module browserWindow {}
+import { BrowserWindow } from 'electron';
+
+declare global {
+  function getBrowserWindowRuntime(): BrowserWindow;
+}

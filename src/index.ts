@@ -1,11 +1,14 @@
-import { ipcMain } from 'electron';
+import { ipcMain, BrowserWindow } from 'electron';
 
-import bw from 'browserWindow';
+import u from './utils';
 
-bw.openDevTools();
+const bw = getBrowserWindowRuntime();
+
+console.log({ u });
+u();
+
+bw.webContents.openDevTools();
 
 ipcMain.on('test', (e, ...args) => {
   console.log('on test', ...args);
 });
-
-console.log('1');

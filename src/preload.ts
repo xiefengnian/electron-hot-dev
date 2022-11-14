@@ -16,4 +16,7 @@ contextBridge.exposeInMainWorld('$api', {
       console.log(res);
     });
   },
+  test3: () => {
+    ipcRenderer.send('test_utils', '1');
+  },
 });

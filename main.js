@@ -8,25 +8,30 @@ const glob = require('glob');
 
 const initAllFile = new Set();
 
-const createContextProvider = (content) => `
+const createContextProvider = (content, filepath) => `
 "use strict";
-
 module.exports = (context) => {
+  if(context.electron.ipcMain.on._hof) {
+    context.electron.ipcMain.on = context.electron.ipcMain.on("${filepath}");
+    context.electron.ipcMain.handle = context.electron.ipcMain.handle("${filepath}");
+  }
 
-  context.electron.ipcMain.on = context.electron.ipcMain.on(__filename);
-  context.electron.ipcMain.handle = context.electron.ipcMain.handle(__filename);
-
-
-  return ((require) => {
+  return ((require, getBrowserWindowRuntime) => {
+    const exports = {};
     \n
-    ${content.replace(/"use strict";/g, '')}
+    ${content.trim().replace(/"use strict";/g, '')}
     \n
+    return exports;
   })((moduleId) => {
+    const __require = require;
     if (context[moduleId]) {
       return context[moduleId];
     }
-    return require(moduleId);
-  })
+    if(moduleId.startsWith('.')) {
+      return __require(moduleId)(context);
+    }
+    return __require(moduleId);
+  },()=>context.browserWindow)
 };
 `;
 
@@ -46,10 +51,10 @@ const transformFile = (filepath, srcDir, toDir) => {
 
   let needProvider = false;
 
-  if (join(srcDir, `index` + ext) === filepath) {
-    needProvider = true;
-  } else if (join(srcDir, 'ipc', name + ext) === filepath) {
-    needProvider = true;
+  if (['.js', '.ts'].includes(ext)) {
+    if (!['preload', 'config'].includes(name)) {
+      needProvider = true;
+    }
   }
 
   if (/\.(js|ts|mjs)$/.test(ext)) {
@@ -64,9 +69,11 @@ const transformFile = (filepath, srcDir, toDir) => {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
+    const outputFilename = join(outputDir, `${name}.js`);
+
     fs.writeFileSync(
-      join(outputDir, `${name}.js`),
-      needProvider ? createContextProvider(code) : code,
+      outputFilename,
+      needProvider ? createContextProvider(code, outputFilename) : code
     );
   } else {
     fs.copyFileSync(filepath, join(toDir, basePath, base));

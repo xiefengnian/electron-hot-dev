@@ -1,5 +1,13 @@
-import { spawnSync } from 'child_process';
+import * as electron from 'electron';
 
-export const func1 = () => {
-  console.log(spawnSync(`echo`, ['"aaaaa"'], { encoding: 'utf-8' }).stdout);
+export const a = () => {
+  console.log('utils export default');
 };
+
+export default () => {
+  console.log('utils export default');
+};
+
+electron.ipcMain.on('test_utils', () => {
+  console.log('on test_utils 3');
+});
