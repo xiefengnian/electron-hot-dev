@@ -3,7 +3,6 @@
     "strict": true,
     "declaration": true,
     "skipLibCheck": true,
-    "baseUrl": "./",
-    "types": ["./type.d.ts"]
+    "baseUrl": "./"
   }
 }
